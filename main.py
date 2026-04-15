@@ -543,4 +543,58 @@ async def trading_loop(connection) -> None:
             df_cache = df
 
             # ── Monitor existing trade (higher priority) ─────────────────
-            if state.open_t
+            if state.open_trade :
+                  await monitor_open_trade(connection, df)
+                await asyncio.sleep(LOOP_INTERVAL)
+                continue
+
+            # ── Periodic BB summary every ~5 minutes ─────────────────────
+            summary_counter += 1
+            if summary_counter % 60 == 0:
+                await send_telegram_message(build_bb_summary(df))
+
+            # ── BB signal detection ──────────────────────────────────────
+            direction = detect_bb_signal(df)
+            if direction is None:
+                await asyncio.sleep(LOOP_INTERVAL)
+                continue
+
+            # ── Daily loss check before entry ────────────────────────────
+            if await check_daily_loss_limit(connection):
+                await asyncio.sleep(LOOP_INTERVAL)
+                continue
+
+            # ── Execute trade ────────────────────────────────────────────
+            await execute_trade(connection, direction, df)
+
+        except asyncio.CancelledError:
+            log.info("Loop cancelled.")
+            break
+        except Exception as e:
+            log.error(f"Loop error: {e}", exc_info=True)
+            await send_telegram_message(f"⚠️ Bot error: {e}")
+            await asyncio.sleep(15)
+
+        await asyncio.sleep(LOOP_INTERVAL)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ENTRY POINT
+# ─────────────────────────────────────────────────────────────────────────────
+async def main():
+    log.info("=" * 60)
+    log.info("  XAUUSD BOLLINGER BAND SCALPING BOT")
+    log.info("=" * 60)
+    api, connection, account = await connect_metaapi()
+    try:
+        await trading_loop(connection)
+    finally:
+        log.info("Closing connection…")
+        await connection.close()
+        log.info("Bot stopped.")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+  
+                     
