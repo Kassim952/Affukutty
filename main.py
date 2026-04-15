@@ -543,10 +543,10 @@ async def trading_loop(connection) -> None:
             df_cache = df
 
             # ── Monitor existing trade (higher priority) ─────────────────
-            if state.open_trade :
-                  await monitor_open_trade(connection, df)
-                await asyncio.sleep(LOOP_INTERVAL)
-                continue
+            if state.open_trade:
+            await monitor_open_trade(connection, df)
+            await asyncio.sleep(LOOP_INTERVAL)
+            continue
 
             # ── Periodic BB summary every ~5 minutes ─────────────────────
             summary_counter += 1
