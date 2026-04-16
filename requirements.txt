@@ -1,7 +1,0 @@
-metaapi-cloud-sdk
-pandas
-numpy
-aiohttp
-yfinance
-ta
-python-dotenv
