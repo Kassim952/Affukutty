@@ -19,15 +19,15 @@ AI_API_KEY         = os.environ.get("AI_INTEGRATIONS_OPENAI_API_KEY", "sk-proj-W
 # SYMBOLS
 # ─────────────────────────────────────────────
 SYMBOLS = [
-    "EURUSD",
-    "GBPUSD",
-    "USDJPY",
-    "AUDUSD",
-    "USDCAD",
-    "USDCHF",
-    "NZDUSD",
-    "XAUUSD",   # Gold
-    "BTCUSD",   # Bitcoin
+    "EURUSD.m",
+    "GBPUSD.m",
+    "USDJPY.m",
+    "AUDUSD.m",
+    "USDCAD.m",
+    "USDCHF.m",
+    "NZDUSD.m",
+    "XAUUSD.m",   # Gold
+    "BTCUSD.m",   # Bitcoin
 ]
 
 # yfinance ticker mapping
